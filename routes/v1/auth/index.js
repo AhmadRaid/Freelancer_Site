@@ -15,5 +15,4 @@ router.post("/verificationEmail", controller.verification_email);
 
 //router.post("/forgetPassword/:userId", controller.forgetPassword);
 
-
 module.exports = router;

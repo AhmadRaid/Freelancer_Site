@@ -6,7 +6,7 @@ const schema = {
     firstName: { type: "string" },
     lastName: { type: "string" },
     email: { type: "string", format: "email" },
-    password: { type: "string", minimum: 6 },
+    password: { type: "string" },
     role: {
       type: "string",
       enum: ["Admin_Team", "Client"],
