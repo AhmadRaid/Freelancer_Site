@@ -1,8 +1,8 @@
 const express = require("express");
 const config = require("config");
 const app = express();
-const port = config.get("server.port");
-const host = config.get("server.host");
+// const port = config.get("server.port");
+// const host = config.get("server.host");
 const {handleSuccess} = require("./utils/response/success"); 
 const {handleError} = require("./utils/response/error"); 
 var bodyParser = require('body-parser')
