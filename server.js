@@ -27,10 +27,10 @@ app.use((error, req, res, next) => {
 
 require('./db/connect')
 
-const server = app.listen('3000', 'localhost', (err) => {
+const server = app.listen('3000', '127.0.0.1', (err) => {
   if (err) {
     console.log(err);
     process.exit(1);
   }
-  console.log(`Server is running on localhost:${server.address()}3000`);
+  console.log(`Server is running on localhost:3000`);
 });
