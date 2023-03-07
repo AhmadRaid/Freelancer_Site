@@ -24,7 +24,7 @@ app.use((error, req, res, next) => {
 
 require('./db/connect')
 
-const server = app.listen('3000', '127.0.0.1', (err) => {
+const server = app.listen(3000, '127.0.0.1', (err) => {
   if (err) {
     console.log(err);
     process.exit(1);
