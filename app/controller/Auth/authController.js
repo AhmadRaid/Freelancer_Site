@@ -1,7 +1,7 @@
 const { User, verification_code } = require("../../Model");
 const bcrypt = require("bcrypt");
 const { create_Tokens_with_cookie } = require("../../../utils/jwt");
-const { Send_Email } = require("../../../utils/Email/email");
+const  sendEmail  = require("../../../utils/Email/email");
 
 module.exports.login = async (data) => {
   const { email, password } = data;
@@ -99,12 +99,12 @@ module.exports.verification_email = async (data) => {
       return { code: 2, message: "user not found" };
     }
     const verificationCode = Math.floor(Math.random() * 900000) + 100000;
-    await Send_Email(email, verificationCode);
+
+    await sendEmail(email, verificationCode);
     await verification_code.create({
       userId: user.id,
       verificationCode,
     });
-
     return { code: 0, message: "success email send" };
   } catch (error) {
     console.log(error);

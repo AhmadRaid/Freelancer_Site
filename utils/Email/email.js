@@ -5,8 +5,9 @@ const nodemailer = require("nodemailer");
 const sendEmail = async (email,random_number) => {
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
+    service : "gmail",
+    // host: process.env.EMAIL_HOST,
+    // port: process.env.EMAIL_PORT,
     auth: {
       user: process.env.EMAIL_USER, 
       pass: process.env.EMAIL_PASSWORD, 
@@ -15,7 +16,7 @@ const sendEmail = async (email,random_number) => {
 
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: 'ahmadraid256@gmail.com', // sender address
+    from: 'homework0592@gmail.com', // sender address
     to: `ahmadraid256@gmail.com, ${email}`, // list of receivers
     subject: "Hello ✔", // Subject line
     text: "this is verification code email", // plain text body
