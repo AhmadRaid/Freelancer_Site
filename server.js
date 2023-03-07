@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 
 app.use("/api", require("./routes/mainRoute"));
 
-app.use("*", (req, res) => res.status(404).send("NOT FOUND PAGE"));
+app.use("*", (req, res) => res.status(404).send("NOT FOUND PAGE Ahmad Raid"));
 
 app.use((error, req, res, next) => {
   res.setHeader("Content-Type", "application/json");
