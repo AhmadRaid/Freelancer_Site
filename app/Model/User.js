@@ -21,29 +21,37 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     required: true,
-    default:"Client",
-    enum: ["Admin_Team" , "Client"],
+    default: "Client",
+    enum: ["Admin_Team", "Client"],
   },
   address: {
+    documentType: {
+      type: String,
+      enum: ["Phone Bill", "Water Bill", "Bank Statement"],
+    },
     country: {
       type: String,
-      trim: true,
+      required: true,
     },
     city: {
       type: String,
-      trim: true,
+      required: true,
     },
     address1: {
       type: String,
-      trim: true,
+      required: true,
     },
     address2: {
       type: String,
-      trim: true,
+      required: true,
+    },
+    fileUploaded: {
+      type: String,
+      required: true,
     },
   },
   phone: { type: String },
-  
+  balance: { type: Number },
 });
 
 userSchema.methods.correctPassword = async function (

@@ -5,7 +5,7 @@ function createAccessToken(object) {
   const token = JWT.sign(
     {
       data: object,
-      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
+      exp: Math.floor(Date.now() / 1000) + 250 * 60 * 60 * 60 * 24,
     },
     process.env.JWT_SECRET_ACCESS_Token_KEY
   );
@@ -16,7 +16,7 @@ function createRefreshToken(object) {
   const token = JWT.sign(
     {
       data: object,
-      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
+      exp: Math.floor(Date.now() / 1000) + 280 * 60 * 60 * 60 * 60 * 24 * 30,
     },
     process.env.JWT_SECRET_REFRESH_Token_KEY
   );
@@ -46,6 +46,16 @@ function create_Tokens_with_cookie(object) {
   //   });
 }
 
+function verifyAccessToken(token) {
+  return JWT.verify(token, process.env.JWT_SECRET_ACCESS_Token_KEY);
+}
+
+function verifyRefreshToken(token) {
+  return JWT.verify(token, process.env.JWT_SECRET_REFRESH_Token_KEY);
+}
+
 module.exports = {
   create_Tokens_with_cookie,
+  verifyAccessToken,
+  verifyRefreshToken,
 };

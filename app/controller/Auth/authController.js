@@ -1,7 +1,8 @@
-const { User, verification_code } = require("../../Model");
+const { User, verification_user } = require("../../Model");
 const bcrypt = require("bcrypt");
 const { create_Tokens_with_cookie } = require("../../../utils/jwt");
-const  sendEmail  = require("../../../utils/Email/email");
+const sendEmail = require("../../../utils/Email/emailNodemailer");
+const S3 = require("../../../utils/AWS/S3");
 
 module.exports.login = async (data) => {
   const { email, password } = data;
@@ -57,12 +58,51 @@ module.exports.signUp = async (data) => {
       role,
     });
 
+    await verification_user.create({
+      userId: user._id,
+    });
+
     let token = create_Tokens_with_cookie({
       id: user._id,
       role: user.role,
     });
 
     return { code: 0, message: "commonSuccess.message", data: { token, user } };
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
+
+module.exports.verificationAddress = async (req, res, userId) => {
+  try {
+    let verificationUser = await verification_user.findOne({ userId });
+
+    if (!verificationUser) {
+      return { code: 2, message: "user not found", data: null };
+    }
+
+    if (!req.file) {
+      return { code: 2, message: "you must add file", data: null };
+    }
+
+    let identifyFile = await S3.upload({
+      Bucket: process.env.AWS_S3_BUCKET_NAME, // bucket name in aws
+      Key: req.file.originalname, // name file
+      Body: req.file.buffer,
+      signatureVersion: "v4",
+    }).promise();
+
+    if (!identifyFile) {
+      return { code: 2, message: "failed file upload", data: null };
+    }
+
+    verificationUser.verificationID = {
+      document_type: "identify_Card",
+      identifyFile: identifyFile.Location,
+    };
+    await verificationUser.save();
+    return { code: 0, message: "success file upload" };
   } catch (error) {
     console.log(error);
     throw new Error(error);
@@ -106,6 +146,49 @@ module.exports.verification_email = async (data) => {
       verificationCode,
     });
     return { code: 0, message: "success email send" };
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
+
+module.exports.verificationIdentity = async (data) => {
+  const { userId, documentType, country, city, address1, address2, file } =
+    data;
+  try {
+    let user = await User.findOne({ userId });
+
+    if (!user) {
+      return { code: 2, message: "user not found", data: null };
+    }
+
+    if (!file) {
+      return { code: 2, message: "you must add file", data: null };
+    }
+
+    let identifyFile = await S3.upload({
+      Bucket: process.env.AWS_S3_BUCKET_NAME, // bucket name in aws
+      Key: file.originalname, // name file
+      Body: file.buffer,
+      signatureVersion: "v4",
+    }).promise();
+
+    if (!identifyFile) {
+      return { code: 2, message: "failed file upload", data: null };
+    }
+
+    user.address = {
+      documentType,
+      country,
+      city,
+      address1,
+      address2,
+      fileUploaded: file,
+    };
+
+    await user.save();
+
+    return { code: 0, message: "success file upload" };
   } catch (error) {
     console.log(error);
     throw new Error(error);

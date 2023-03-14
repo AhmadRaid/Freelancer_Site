@@ -10,12 +10,12 @@ const verificationSchema = new mongoose.Schema({
     default: false,
   },
   verificationID: {
-    type: Boolean,
     document_type: {
       type: String,
       enum: ["identify_Card", "Passport", "Driver License"],
     },
-    idFile: [String],
+    identifyFile: String,
+    default: false,
   },
   verificationMobile: {
     type: Boolean,
@@ -50,7 +50,6 @@ const verificationSchema = new mongoose.Schema({
       note: { type: String },
     },
   },
-  createdAt: { type: Date, expires: "2m", default: Date.now },
 });
 const Verification = mongoose.model("verification_user", verificationSchema);
 module.exports = Verification;

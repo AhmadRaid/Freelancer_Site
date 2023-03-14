@@ -4,6 +4,7 @@ const {handleSuccess} = require("./utils/response/success");
 const {handleError} = require("./utils/response/error"); 
 var bodyParser = require('body-parser')
 
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -23,6 +24,9 @@ app.use((error, req, res, next) => {
 });
 
 require('./db/connect')
+
+require("./utils/Email/email"); 
+
 
 const server = app.listen(3000, (err) => {
   if (err) {

@@ -1,4 +1,4 @@
-const authController = require("./authController.js");
+const withdrawController = require("./withdrawController.js");
 const {
   Success,
   Created,
@@ -8,65 +8,14 @@ const {
   BadRequest,
   NotFound,
 } = require("../../../utils/response/error/errors");
-
-module.exports.signUp = async (req, res, next) => {
+module.exports.getAllWithdraw = async (req, res, next) => {
   try {
-    const { message, data, code } = await authController.signUp({
-      ...req.body,
-    });
+    let userId = req.user._id;
 
-    if (code === 0) {
-      return next(new Success(message, data));
-    }
-
-    return next(new BadRequest(message));
-  } catch (err) {
-    console.log(err);
-    return next(new InternalServerError(req));
-  }
-};
-
-module.exports.login = async (req, res, next) => {
-  try {
-    const { message, data, code } = await authController.login({
-      ...req.body,
-    });
-
-    if (code === 0) {
-      return next(new Success(message, data));
-    }
-
-    return next(new BadRequest(message));
-  } catch (err) {
-    console.log(err);
-    return next(new InternalServerError(req));
-  }
-};
-
-module.exports.verification_email = async (req, res, next) => {
-  try {
-    const { message, data, code } = await authController.verification_email({
-      ...req.body,
-    });
-
-    if (code === 0) {
-      return next(new Success(message, data));
-    }
-
-    return next(new BadRequest(message));
-  } catch (err) {
-    console.log(err);
-    return next(new InternalServerError(req));
-  }
-};
-
-module.exports.verificationIdentity = async (req, res, next) => {
-  try {
-    const { message, data, code } = await authController.verificationIdentity(
-      req,
-      res,
-      req.body.user_id
+    const { message, data, code } = await withdrawController.getAllWithdraw(
+      userId
     );
+
     if (code === 0) {
       return next(new Success(message, data));
     }
@@ -78,14 +27,70 @@ module.exports.verificationIdentity = async (req, res, next) => {
   }
 };
 
-module.exports.verificationAddress = async (req, res, next) => {
+module.exports.addWithdraw = async (req, res, next) => {
   try {
-    const userId = req.user._id;
-    const { message, data, code } = await authController.verificationIdentity({
+    const { message, data, code } = await withdrawController.addWithdraw({
       ...req.body,
-      ...userId,
-      ...req
     });
+
+    if (code === 0) {
+      return next(new Success(message, data));
+    }
+
+    return next(new BadRequest(message));
+  } catch (err) {
+    console.log(err);
+    return next(new InternalServerError(req));
+  }
+};
+
+module.exports.editWithdraw = async (req, res, next) => {
+  try {
+    let userId = req.user._id;
+    const { message, data, code } = await withdrawController.editWithdraw({
+      ...req.params,
+      ...userId,
+    });
+
+    if (code === 0) {
+      return next(new Success(message, data));
+    }
+
+    return next(new BadRequest(message));
+  } catch (err) {
+    console.log(err);
+    return next(new InternalServerError(req));
+  }
+};
+
+module.exports.deleteWithdraw = async (req, res, next) => {
+  try {
+    let userId = req.user._id;
+    const { message, data, code } = await withdrawController.deleteWithdraw({
+      ...req.params,
+      ...userId,
+    });
+
+    if (code === 0) {
+      return next(new Success(message, data));
+    }
+
+    return next(new BadRequest(message));
+  } catch (err) {
+    console.log(err);
+    return next(new InternalServerError(req));
+  }
+};
+
+module.exports.getWithdrawDetails = async (req, res, next) => {
+  try {
+    let WithdrawId = req.params.withdrawId;
+    let userId = req.user._id;
+    const { message, data, code } = await withdrawController.getWithdrawDetails(
+      WithdrawId,
+      userId
+    );
+
     if (code === 0) {
       return next(new Success(message, data));
     }
